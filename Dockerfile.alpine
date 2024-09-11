@@ -1,0 +1,28 @@
+FROM alpine:latest
+
+# Instalar openssh-client y sshpass
+RUN apk add --update --no-cache openssh openssh-client sshpass python3 py3-pip
+
+# Crear enlace simbolico
+RUN ln -sf python3 /usr/bin/python
+
+WORKDIR /app
+
+ADD requirements.txt .
+RUN pip install --break-system-packages -r requirements.txt
+
+ADD src/. .
+
+ENV SFTPHOSTNAME=VALUE
+ENV SFTPPORT=VALUE
+ENV SFTPUSERNAME=VALUE
+ENV SFTPPASSWORD=VALUE
+ENV SFTPLOCALFILE=VALUE
+ENV SFTPREMOTEPATH=VALUE
+ENV SFTPACTION=VALUE
+ENV GCPBUCKET=VALUE
+ENV GCPFILEPATH=VALUE
+ENV SERVICE_ACCOUNT=VALUE
+
+#Comando para ejecutar proceso principal
+CMD ["python", "main.py"]
